@@ -1,0 +1,173 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .topBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .topBar button {
+    width: 100%;
+  }
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--wa-text-primary);
+  letter-spacing: -0.3px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--wa-text-secondary);
+}
+
+.filterBar {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--glass);
+  border-bottom: 1px solid var(--stroke);
+}
+
+@media (max-width: 640px) {
+  .filterBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .filterGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .filterGroup :global(.ant-select) {
+    flex: 1;
+  }
+}
+
+.searchBox {
+  width: 320px;
+}
+
+@media (max-width: 640px) {
+  .searchBox {
+    width: 100%;
+  }
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tableWrapper {
+  padding: 8px;
+  background: var(--glass);
+  border-radius: 14px;
+}
+
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.drawerSection {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--glass-strong);
+  border: 1px solid var(--stroke);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drawerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--wa-glass-border);
+}
+
+.drawerRow:last-child {
+  border-bottom: none;
+}
+
+.drawerLabel {
+  color: var(--wa-text-secondary);
+}
+
+.drawerValue {
+  color: var(--wa-text-primary);
+  font-family: monospace;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--wa-glass-border);
+}
+
+.actionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .actionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actionCard {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow);
+}
+
+.actionCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--wa-text-primary);
+}
+
+.actionCardDesc {
+  font-size: 13px;
+  color: var(--wa-text-secondary);
+  margin-top: -6px;
+}
+

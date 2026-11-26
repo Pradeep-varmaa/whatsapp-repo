@@ -1,0 +1,138 @@
+{
+  "info": {
+    "_postman_id": "wa-engine-messages-v1",
+    "name": "WhatsApp Engine - Message Dispatch",
+    "description": "Postman collection for dispatching WhatsApp messages via the WA Engine to recipient +919618795584.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Send Template Message (Initiate Chat)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{API_KEY}}",
+            "description": "Replace with your wae_live_... API key, or use x-api-key header"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"to\": \"+919618795584\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"hello_world\",\n    \"language\": \"en_US\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/messages",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "messages"
+          ]
+        },
+        "description": "Sends a pre-approved Meta template (hello_world) to +919618795584. Required by Meta for initiating a conversation outside the 24-hour window."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Send Free Text Message (Inside 24h Window)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{API_KEY}}",
+            "description": "Replace with your wae_live_... API key, or use x-api-key header"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"to\": \"+919618795584\",\n  \"type\": \"text\",\n  \"text\": \"Hello! This is a message from the WA Engine.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/messages",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "messages"
+          ]
+        },
+        "description": "Sends a free-form text message to +919618795584. Valid when the customer has replied within the preceding 24 hours."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Send Template Message with Parameters",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{API_KEY}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"to\": \"+919618795584\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"order_confirmation_v1\",\n    \"language\": \"en_US\",\n    \"components\": [\n      {\n        \"type\": \"header\",\n        \"parameters\": [\n          { \"type\": \"text\", \"text\": \"ORD-9821\" }\n        ]\n      },\n      {\n        \"type\": \"body\",\n        \"parameters\": [\n          { \"type\": \"text\", \"text\": \"Rahul\" },\n          { \"type\": \"text\", \"text\": \"₹1,499\" }\n        ]\n      }\n    ]\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/v1/messages",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "messages"
+          ]
+        },
+        "description": "Template message with dynamic variables (header, body parameters)."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "API_KEY",
+      "value": "wae_live_REPLACE_WITH_YOUR_KEY",
+      "type": "string"
+    }
+  ]
+}

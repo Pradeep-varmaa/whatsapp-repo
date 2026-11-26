@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Workflow Builder - Elements, Fields & Validations Guide</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --accent: #25d366;
+      --accent-glow: rgba(37, 211, 102, 0.25);
+      --condition-color: #eab308;
+      --api-color: #10b981;
+      --ask-color: #f97316;
+      --btn-color: #a855f7;
+      --list-color: #0ea5e9;
+      --msg-color: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Top presentation toolbar */
+    header {
+      display: flex;
+      justifyContent: space-between;
+      align-items: center;
+      padding: 12px 28px;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-badge {
+      background: #059669;
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .slide-counter {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+
+    /* Main presentation viewport */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      height: 100%;
+      max-height: 680px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 36px 44px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      animation: fadeIn 0.25s ease-in-out;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Slide Header */
+    .slide-title-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 14px;
+    }
+
+    .node-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .slide-title-text h2 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .slide-title-text p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* 2-column slide layout: Visual Node Card on left, details on right */
+    .slide-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 32px;
+      flex: 1;
+      align-items: start;
+    }
+
+    /* Node Mockup card that mirrors ReactFlow visual design */
+    .node-preview-card {
+      background: #182234;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .preview-port-top, .preview-port-bottom {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 2px solid #fff;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .preview-port-top { top: -6px; }
+    .preview-port-bottom { bottom: -6px; }
+
+    .node-preview-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .node-preview-body {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      color: #e5e7eb;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .node-preview-ports {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Details styling */
+    .details-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .detail-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px 18px;
+    }
+
+    .detail-card h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    th {
+      text-align: left;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 8px;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e5e7eb;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #38bdf8;
+      font-family: monospace;
+    }
+
+    .validation-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Bottom slide controls */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--card-border);
+      z-index: 10;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    button {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    button.primary {
+      background: #059669;
+      border-color: #10b981;
+    }
+
+    button.primary:hover {
+      background: #10b981;
+    }
+
+    .shortcut-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Interactive playground for condition node */
+    .demo-box {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .demo-box input, .demo-box select {
+      background: #111827;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .demo-result {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <span>🚀 WhatsApp Engine</span>
+      <span class="brand-badge">Workflow Architecture</span>
+    </div>
+    <div class="slide-counter" id="slideIndicator">Slide 1 of 12</div>
+  </header>
+
+  <!-- Presentation Main Area -->
+  <main>
+
+    <!-- SLIDE 1: Title & Overview -->
+    <div class="slide active" id="slide-1">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #25d366; color: #fff;">📊</div>
+        <div class="slide-title-text">
+          <h2>Workflow Builder: Elements, Fields & Validation Rules</h2>
+          <p>Complete Reference Guide for Studio Nodes and Decision Logic</p>
+        </div>
+      </div>
+      <div style="font-size: 14px; line-height: 1.7; color: #d1d5db; margin-top: 10px;">
+        <p style="margin-bottom: 16px;">
+          The WhatsApp Engine visual workflow builder is a node-based DAG (Directed Acyclic Graph) system built on ReactFlow. It allows enterprise teams to construct multi-turn interactive conversational agents with API integrations, calendar pickers, time slot reservations, and intelligent conditional branching.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px;">
+          <div class="detail-card">
+            <h3 style="color: #3b82f6;">⚡ 1. Entry & Communication</h3>
+            <p style="font-size: 12px; color: #9ca3af;"><strong>Trigger</strong> monitors inbound WhatsApp keywords. <strong>Message</strong> sends outbound rich text with dynamic token replacements.</p>
+          </div>
+          <div class="detail-card">
+            <h3 style="color: #a855f7;">🔘 2. Interactive Selection</h3>
+            <p style="font-size: 12px; color: #9ca3af;"><strong>Quick Buttons</strong> (1-3 click options) and <strong>Menu List</strong> (up to 10 rows or live API dynamic array mapping).</p>
+          </div>
+          <div class="detail-card">
+            <h3 style="color: #eab308;">🔀 3. Logic & Decision</h3>
+            <p style="font-size: 12px; color: #9ca3af;"><strong>Condition (If/Else)</strong> branches flows by evaluating variables against 9 logical comparison operators.</p>
+          </div>
+          <div class="detail-card">
+            <h3 style="color: #f97316;">❓ 4. Data Capture</h3>
+            <p style="font-size: 12px; color: #9ca3af;"><strong>Ask Node</strong> captures text, numbers, emails, calendar dates, or time slots with automatic normalization.</p>
+          </div>
+          <div class="detail-card">
+            <h3 style="color: #10b981;">🌐 5. Webhooks & Backend</h3>
+            <p style="font-size: 12px; color: #9ca3af;"><strong>Server API</strong> makes REST HTTP requests with allowlist SSRF protection and discrete Success/Error ports.</p>
+          </div>
+          <div class="detail-card">
+            <h3 style="color: #9ca3af;">🏁 6. Lifecycle</h3>
+            <p style="font-size: 12px; color: #9ca3af;"><strong>End Flow</strong> terminates the active customer session cleanly and updates execution metrics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Trigger Node -->
+    <div class="slide" id="slide-2">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #eab308; color: #000;">⚡</div>
+        <div class="slide-title-text">
+          <h2>Trigger Node (Workflow Entry Point)</h2>
+          <p>Listens for customer inbound keywords to start an automated flow</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #eab308; background: rgba(234, 179, 8, 0.08);">
+          <div class="node-preview-header" style="color: #facc15;">
+            <span>⚡ Trigger Node</span>
+          </div>
+          <div class="node-preview-body">
+            <div><strong>Keywords:</strong> <code>start, hi, hello, menu</code></div>
+            <div style="font-size: 11px; color: #9ca3af; margin-top: 6px;">Description: General customer entry trigger</div>
+          </div>
+          <div class="node-preview-ports" style="justify-content: center; color: #eab308;">
+            <span>● Output: (next)</span>
+          </div>
+          <div class="preview-port-bottom" style="background: #eab308;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>📝 Configurable Fields</h3>
+            <table>
+              <tr><th>Field</th><th>Type</th><th>Req</th><th>Description</th></tr>
+              <tr><td><code>keyword</code></td><td>String</td><td>No</td><td>Comma-separated keywords (case-insensitive) e.g. <code>hi, book, start</code></td></tr>
+              <tr><td><code>description</code></td><td>String</td><td>No</td><td>Internal administrative notes describing when this triggers.</td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules (Graph Publisher)</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • Exactly <strong>1 Trigger node</strong> must exist in the workflow graph.<br>
+              • The <code>next</code> port <strong>must be connected</strong> to an outgoing node.<br>
+              • No incoming connections are permitted (Trigger is always the root).
+            </p>
+          </div>
+
+          <div class="detail-card">
+            <h3>💬 WhatsApp Runtime Behavior</h3>
+            <p style="font-size: 12px; color: #9ca3af;">
+              When a user messages your WhatsApp Business number, the engine matches the incoming text against active triggers. Upon a match, a new run record is stored and execution immediately moves to the node connected on <code>next</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Message Node -->
+    <div class="slide" id="slide-3">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #3b82f6; color: #fff;">💬</div>
+        <div class="slide-title-text">
+          <h2>Message Node (Outbound Text)</h2>
+          <p>Dispatches text messages with emoji and dynamic variable interpolation</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #3b82f6; background: rgba(59, 130, 246, 0.08);">
+          <div class="preview-port-top" style="background: #3b82f6;"></div>
+          <div class="node-preview-header" style="color: #60a5fa;">
+            <span>💬 Message</span>
+          </div>
+          <div class="node-preview-body">
+            "Hello <code>{{customer_name}}</code>, welcome to Acme! Your balance is <code>{{api_result.balance}}</code>."
+          </div>
+          <div class="node-preview-ports" style="justify-content: center; color: #3b82f6;">
+            <span>● Output: (next)</span>
+          </div>
+          <div class="preview-port-bottom" style="background: #3b82f6;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>📝 Configurable Fields</h3>
+            <table>
+              <tr><th>Field</th><th>Type</th><th>Req</th><th>Description</th></tr>
+              <tr><td><code>text</code></td><td>Textarea</td><td><strong>Yes</strong></td><td>Outbound message body. Supports variables like <code>{{variable_name}}</code> or <code>{{api_result.user.name}}</code>.</td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • <code>text</code> cannot be blank or empty whitespace.<br>
+              • The <code>next</code> port must be connected to a downstream node.
+            </p>
+          </div>
+
+          <div class="detail-card">
+            <h3>💬 WhatsApp Runtime Behavior</h3>
+            <p style="font-size: 12px; color: #9ca3af;">
+              Dispatches standard WhatsApp text payload. Formatted with WhatsApp markdown (*bold*, _italic_, ~strike~). Automatically replaces <code>{{tokens}}</code> from context and proceeds seamlessly to the next step.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Quick Buttons Node -->
+    <div class="slide" id="slide-4">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #a855f7; color: #fff;">🔘</div>
+        <div class="slide-title-text">
+          <h2>Quick Buttons Node (Interactive 1-3 Buttons)</h2>
+          <p>Native WhatsApp tap-to-reply buttons for fast user choices</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #a855f7; background: rgba(168, 85, 247, 0.08);">
+          <div class="preview-port-top" style="background: #a855f7;"></div>
+          <div class="node-preview-header" style="color: #c084fc;">
+            <span>🔘 Quick Buttons</span>
+          </div>
+          <div class="node-preview-body">
+            <div>"How can we help you today?"</div>
+            <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
+              <div style="background: #2e1065; padding: 4px 8px; border-radius: 4px; font-size: 11px;">[ 1. Book Now ]</div>
+              <div style="background: #2e1065; padding: 4px 8px; border-radius: 4px; font-size: 11px;">[ 2. Pricing ]</div>
+              <div style="background: #2e1065; padding: 4px 8px; border-radius: 4px; font-size: 11px;">[ 3. Support ]</div>
+            </div>
+          </div>
+          <div class="node-preview-ports" style="color: #c084fc;">
+            <span>● btn_1</span><span>● btn_2</span><span>● btn_3</span>
+          </div>
+          <div class="preview-port-bottom" style="background: #a855f7;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>📝 Configurable Fields</h3>
+            <table>
+              <tr><th>Field</th><th>Type</th><th>Req</th><th>Description</th></tr>
+              <tr><td><code>text</code></td><td>String</td><td><strong>Yes</strong></td><td>Header prompt above buttons. Max 1024 characters.</td></tr>
+              <tr><td><code>opts</code></td><td>Array</td><td><strong>Yes</strong></td><td>1 to 3 button objects. Each has <code>id</code> and <code>title</code>.</td></tr>
+              <tr><td><code>title</code></td><td>String</td><td><strong>Yes</strong></td><td><strong>Max 20 chars</strong> (Meta Cloud API limit).</td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • Maximum 3 buttons allowed (Meta limitation).<br>
+              • Button titles cannot exceed 20 characters.<br>
+              • <strong>Every button port must be connected</strong> in the canvas (no unhandled paths).
+            </p>
+          </div>
+
+          <div class="detail-card">
+            <h3>💬 WhatsApp Runtime Behavior</h3>
+            <p style="font-size: 12px; color: #9ca3af;">
+              Pauses execution in <code>waiting_reply</code> state. When the user taps a button, WhatsApp sends a webhook with the button ID. The runner records the choice in <code>selected_row_id</code> and follows that button's connected port.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Menu List Node -->
+    <div class="slide" id="slide-5">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #0ea5e9; color: #fff;">📋</div>
+        <div class="slide-title-text">
+          <h2>Menu List Node (Static & Dynamic API Array)</h2>
+          <p>Interactive popup list picker with up to 10 rows or live API dynamic row mapping</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #0ea5e9; background: rgba(14, 165, 233, 0.08);">
+          <div class="preview-port-top" style="background: #0ea5e9;"></div>
+          <div class="node-preview-header" style="color: #38bdf8;">
+            <span>📋 Menu List</span>
+          </div>
+          <div class="node-preview-body">
+            <div>"Select a product from our catalog:"</div>
+            <div style="margin-top: 6px; font-size: 11px; color: #0284c7;">
+              <strong>Mode:</strong> Dynamic Array <code>{{api_result.products}}</code>
+            </div>
+            <div style="font-size: 10px; color: #9ca3af;">Title: <code>title</code> | Desc: <code>price</code></div>
+          </div>
+          <div class="node-preview-ports" style="justify-content: center; color: #38bdf8;">
+            <span>● Output: (next)</span>
+          </div>
+          <div class="preview-port-bottom" style="background: #0ea5e9;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>📝 Configurable Fields</h3>
+            <table>
+              <tr><th>Field</th><th>Mode</th><th>Req</th><th>Description</th></tr>
+              <tr><td><code>text</code></td><td>Both</td><td><strong>Yes</strong></td><td>Message body above the list button.</td></tr>
+              <tr><td><code>buttonText</code></td><td>Both</td><td>No</td><td>Text on the popup trigger button (max 20 chars).</td></tr>
+              <tr><td><code>is_dynamic</code></td><td>Both</td><td>No</td><td>Toggle between Static (1-10 rows) and Dynamic API array.</td></tr>
+              <tr><td><code>array_path</code></td><td>Dynamic</td><td><strong>Yes</strong></td><td>Path to array e.g. <code>{{api_result.products}}</code>.</td></tr>
+              <tr><td><code>title_field</code></td><td>Dynamic</td><td><strong>Yes</strong></td><td>Field used for row title (max 24 chars).</td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • Maximum 10 items allowed by WhatsApp Meta API.<br>
+              • Titles limited to 24 chars; Descriptions limited to 72 chars.<br>
+              • In Dynamic mode, requires valid <code>array_path</code> and a single <code>next</code> port connection.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: Ask Question Node -->
+    <div class="slide" id="slide-6">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #f97316; color: #fff;">❓</div>
+        <div class="slide-title-text">
+          <h2>Ask Question Node (User Input Capture)</h2>
+          <p>Pauses flow and validates customer replies before storing in context</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #f97316; background: rgba(249, 115, 22, 0.08);">
+          <div class="preview-port-top" style="background: #f97316;"></div>
+          <div class="node-preview-header" style="color: #fb923c;">
+            <span>❓ Ask Question</span>
+          </div>
+          <div class="node-preview-body">
+            <div>"Please enter your email address:"</div>
+            <div style="margin-top: 8px;">Save to: <code>customer_email</code></div>
+            <div>Kind: <code>email</code></div>
+          </div>
+          <div class="node-preview-ports" style="justify-content: center; color: #fb923c;">
+            <span>● Output: (next)</span>
+          </div>
+          <div class="preview-port-bottom" style="background: #f97316;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>📝 Validation Kinds</h3>
+            <table>
+              <tr><th>Kind</th><th>What It Accepts</th><th>Failure Behavior</th></tr>
+              <tr><td><code>text</code></td><td>Any text string</td><td>Never rejects</td></tr>
+              <tr><td><code>number</code></td><td>Numeric digits (e.g. 100, 42.5)</td><td>Reprompts: <em>"Please reply with a valid number"</em></td></tr>
+              <tr><td><code>email</code></td><td>Valid email (user@domain.com)</td><td>Reprompts: <em>"Please reply with a valid email"</em></td></tr>
+              <tr><td><code>date</code></td><td>YYYY-MM-DD or DD/MM/YYYY</td><td>Normalizes to ISO date or reprompts</td></tr>
+              <tr><td><code>time</code></td><td>HH:MM, AM/PM, or Slot</td><td>Normalizes or prompts for custom time</td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • Variable name must be a valid alphanumeric identifier: <code>^[a-zA-Z_][a-zA-Z0-9_]*$</code>.<br>
+              • Kind must be one of the shared <code>ASK_KINDS</code> enum values.<br>
+              • <code>next</code> port must be connected.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Date Picker Component -->
+    <div class="slide" id="slide-7">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #0f766e; color: #fff;">📅</div>
+        <div class="slide-title-text">
+          <h2>Date Picker Component (Calendar Flow)</h2>
+          <p>Native WhatsApp interactive list calendar for booking and reservations</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #0f766e; background: rgba(15, 118, 110, 0.08);">
+          <div class="preview-port-top" style="background: #0f766e;"></div>
+          <div class="node-preview-header" style="color: #2dd4bf;">
+            <span>📅 Date Picker</span>
+          </div>
+          <div class="node-preview-body">
+            <div>"Please select your appointment date:"</div>
+            <div style="margin-top: 6px; font-size: 11px; color: #14b8a6;">
+              WhatsApp List: Today, Tomorrow, Next 5 Days
+            </div>
+            <div style="margin-top: 4px;">Save: <code>{{selected_date}}</code> (ISO YYYY-MM-DD)</div>
+          </div>
+          <div class="node-preview-ports" style="justify-content: center; color: #2dd4bf;">
+            <span>● Output: (next)</span>
+          </div>
+          <div class="preview-port-bottom" style="background: #0f766e;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>💬 How It Appears on WhatsApp</h3>
+            <p style="font-size: 12px; color: #d1d5db; line-height: 1.6;">
+              Because WhatsApp has no OS-native HTML5 date picker widget, the engine delivers an <strong>Interactive List Message</strong> containing:
+              <br>• <strong>Today</strong> (e.g. <code>Today (Mon, Nov 17)</code>)
+              <br>• <strong>Tomorrow</strong> (e.g. <code>Tomorrow (Tue, Nov 18)</code>)
+              <br>• <strong>Next 5 Business Days</strong> calculated automatically
+              <br>• Plus fallback text prompt support for manual replies (e.g. <code>25/11/2026</code>)
+            </p>
+          </div>
+
+          <div class="detail-card">
+            <h3>🔄 Parsing & ISO Normalization</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              User types <code>25/11/2026</code> or selects <code>Tomorrow</code> → engine normalizes to <code>2026-11-25</code>.<br>
+              Stored in both your custom variable and standard <code>{{selected_date}}</code>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Time Picker Component -->
+    <div class="slide" id="slide-8">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #0284c7; color: #fff;">⏰</div>
+        <div class="slide-title-text">
+          <h2>Time Picker Component (Time Slots & Custom Hours)</h2>
+          <p>Two-tier interactive time selection with smart custom time pause</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #0284c7; background: rgba(2, 132, 199, 0.08);">
+          <div class="preview-port-top" style="background: #0284c7;"></div>
+          <div class="node-preview-header" style="color: #38bdf8;">
+            <span>⏰ Time Picker</span>
+          </div>
+          <div class="node-preview-body">
+            <div>"Select your preferred time slot:"</div>
+            <div style="font-size: 11px; margin-top: 6px; color: #7dd3fc;">
+              Slots: Morning, Afternoon, Evening, Custom Time
+            </div>
+            <div style="margin-top: 4px;">Save: <code>{{selected_time}}</code></div>
+          </div>
+          <div class="node-preview-ports" style="justify-content: center; color: #38bdf8;">
+            <span>● Output: (next)</span>
+          </div>
+          <div class="preview-port-bottom" style="background: #0284c7;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>🕒 Pre-Configured WhatsApp Time Slots</h3>
+            <table>
+              <tr><th>Slot ID</th><th>Display Title</th><th>Period</th></tr>
+              <tr><td><code>slot_10am</code></td><td>10:00 AM - 11:00 AM</td><td>Morning</td></tr>
+              <tr><td><code>slot_02pm</code></td><td>02:00 PM - 03:00 PM</td><td>Afternoon</td></tr>
+              <tr><td><code>slot_06pm</code></td><td>06:00 PM - 07:00 PM</td><td>Evening</td></tr>
+              <tr><td><code>slot_custom</code></td><td>⏰ Custom Time</td><td>Free-text Prompt</td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>⚡ Smart Custom Time Handling</h3>
+            <p style="font-size: 12px; color: #d1d5db;">
+              When the user selects <strong>"⏰ Custom Time"</strong>, the engine stays waiting on the node and prompts: <em>"Please reply with your preferred time (e.g. 10:00 AM or 14:30)."</em> The subsequent message is validated and parsed into clean time format.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Condition (If / Else) Node -->
+    <div class="slide" id="slide-9">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #eab308; color: #000;">🔀</div>
+        <div class="slide-title-text">
+          <h2>Condition Node (If / Else Decision Engine)</h2>
+          <p>Branch conversation flow based on variable comparison logic</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #eab308; background: rgba(234, 179, 8, 0.08);">
+          <div class="preview-port-top" style="background: #eab308;"></div>
+          <div class="node-preview-header" style="color: #facc15;">
+            <span>🔀 Condition (If / Else)</span>
+          </div>
+          <div class="node-preview-body">
+            <span style="color: #fbbf24; font-weight: 700;">if</span>
+            <code>{{order_total}}</code>
+            <span style="color: #9ca3af; font-size: 11px;">greater_than</span>
+            <code>100</code>
+          </div>
+          <div class="node-preview-ports" style="padding-top: 8px;">
+            <span style="color: #10b981;">✓ True (If)</span>
+            <span style="color: #f43f5e;">✕ False (Else)</span>
+          </div>
+          <div class="preview-port-bottom" style="left: 25%; background: #10b981;"></div>
+          <div class="preview-port-bottom" style="left: 75%; background: #f43f5e;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>⚙️ 9 Logical Comparison Operators</h3>
+            <table>
+              <tr><th>Operator</th><th>Logic</th><th>Example</th></tr>
+              <tr><td><code>equals</code></td><td>Case-insensitive string equality</td><td><code>{{response}} == "YES"</code></td></tr>
+              <tr><td><code>not_equals</code></td><td>Inequality check</td><td><code>{{status}} != "CANCELLED"</code></td></tr>
+              <tr><td><code>contains</code></td><td>Substring search</td><td><code>{{message}} contains "urgent"</code></td></tr>
+              <tr><td><code>greater_than</code></td><td>Numeric / alphabetical comparison</td><td><code>{{total}} > 100</code></td></tr>
+              <tr><td><code>less_than</code></td><td>Numeric comparison</td><td><code>{{age}} < 18</code></td></tr>
+              <tr><td><code>is_empty</code></td><td>Checks if null, undefined, or empty</td><td><code>{{code}} is null</code></td></tr>
+              <tr><td><code>is_not_empty</code></td><td>Checks if variable has any value</td><td><code>{{notes}} has value</code></td></tr>
+              <tr><td><code>exists</code></td><td>Checks if variable is declared</td><td><code>{{api_result}} exists</code></td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • <code>variable</code> is required.<br>
+              • <strong>BOTH output ports must be connected:</strong> <code>true</code> (If branch) and <code>false</code> (Else branch).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: Server API Node -->
+    <div class="slide" id="slide-10">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #10b981; color: #fff;">🌐</div>
+        <div class="slide-title-text">
+          <h2>Server API Node (HTTP Webhooks & Field Mapping)</h2>
+          <p>Real-time HTTP requests to external CRM, databases, and ERP backends</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #10b981; background: rgba(16, 185, 129, 0.08);">
+          <div class="preview-port-top" style="background: #10b981;"></div>
+          <div class="node-preview-header" style="color: #34d399;">
+            <span>🌐 Server API Call</span>
+          </div>
+          <div class="node-preview-body">
+            <div><span style="background: #059669; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 10px;">POST</span> api.crm.com/v1/orders</div>
+            <div style="font-size: 11px; color: #6ee7b7; margin-top: 6px;">Save JSON: <code>{{api_result}}</code></div>
+            <div style="font-size: 10px; color: #c084fc;">Mapped: <code>response.id -> order_id</code></div>
+          </div>
+          <div class="node-preview-ports" style="padding-top: 8px;">
+            <span style="color: #10b981;">✓ Success</span>
+            <span style="color: #ef4444;">✕ Error</span>
+          </div>
+          <div class="preview-port-bottom" style="left: 25%; background: #10b981;"></div>
+          <div class="preview-port-bottom" style="left: 75%; background: #ef4444;"></div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>🔒 Security & SSRF Protection</h3>
+            <p style="font-size: 12px; color: #d1d5db;">
+              All destination hosts must be pre-approved in the <strong>Webhook Allowlist</strong>. Unregistered hosts trigger immediate security blocks and take the Error branch. Built-in 5000ms timeout prevents hangs.
+            </p>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • URL must be a valid HTTP/HTTPS endpoint.<br>
+              • <strong>Both ports must be connected:</strong> <code>success</code> (HTTP 2xx) and <code>error</code> (4xx, 5xx, or network failure).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: End Flow Node -->
+    <div class="slide" id="slide-11">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #9ca3af; color: #000;">🏁</div>
+        <div class="slide-title-text">
+          <h2>End Flow Node (Conversation Termination)</h2>
+          <p>Concludes the session and records completed run metrics</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #9ca3af; background: rgba(156, 163, 175, 0.08);">
+          <div class="preview-port-top" style="background: #9ca3af;"></div>
+          <div class="node-preview-header" style="color: #e5e7eb;">
+            <span>🏁 End Flow</span>
+          </div>
+          <div class="node-preview-body">
+            "Thank you for contacting us! Have a wonderful day ahead."
+          </div>
+          <div class="node-preview-ports" style="justify-content: center; color: #9ca3af;">
+            <span>● Terminal (No outgoing ports)</span>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>📝 Configurable Fields</h3>
+            <table>
+              <tr><th>Field</th><th>Type</th><th>Req</th><th>Description</th></tr>
+              <tr><td><code>text</code></td><td>Textarea</td><td>No</td><td>Optional closing goodbye text sent before terminating.</td></tr>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <h3>🛡️ Validation Rules</h3>
+            <p style="font-size: 12px; color: #e5e7eb;">
+              • Must not have any outgoing edge connections.<br>
+              • Must have at least one incoming connection from ancestor nodes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: Summary Matrix -->
+    <div class="slide" id="slide-12">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #059669; color: #fff;">🏆</div>
+        <div class="slide-title-text">
+          <h2>Master Elements Comparison Matrix</h2>
+          <p>Quick reference for all ports, Meta constraints, and validation requirements</p>
+        </div>
+      </div>
+      <div style="overflow-x: auto; margin-top: 10px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Node</th>
+              <th>Icon</th>
+              <th>Output Ports</th>
+              <th>WhatsApp Payload</th>
+              <th>Meta / System Constraints</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Trigger</strong></td><td>⚡</td><td><code>next</code> (1)</td><td>Inbound Listener</td><td>Exactly 1 per graph</td></tr>
+            <tr><td><strong>Message</strong></td><td>💬</td><td><code>next</code> (1)</td><td>Text</td><td>Non-empty text</td></tr>
+            <tr><td><strong>Quick Buttons</strong></td><td>🔘</td><td>Option IDs (1-3)</td><td>Interactive Buttons</td><td>Max 3 buttons, title ≤ 20 chars</td></tr>
+            <tr><td><strong>Menu List</strong></td><td>📋</td><td>Static IDs or <code>next</code></td><td>Interactive List</td><td>Max 10 rows, title ≤ 24 chars</td></tr>
+            <tr><td><strong>Ask Question</strong></td><td>❓</td><td><code>next</code> (1)</td><td>Text with reprompts</td><td>Alphanumeric variable name</td></tr>
+            <tr><td><strong>Date Picker</strong></td><td>📅</td><td><code>next</code> (1)</td><td>List (Dates)</td><td>Normalizes to ISO YYYY-MM-DD</td></tr>
+            <tr><td><strong>Time Picker</strong></td><td>⏰</td><td><code>next</code> (1)</td><td>List (Time slots)</td><td>Handles custom time pause</td></tr>
+            <tr><td><strong>Condition</strong></td><td>🔀</td><td><code>true</code> & <code>false</code> (2)</td><td>Internal Router</td><td>Both ports must be connected</td></tr>
+            <tr><td><strong>Server API</strong></td><td>🌐</td><td><code>success</code> & <code>error</code> (2)</td><td>Silent HTTP</td><td>SSRF Webhook allowlist check</td></tr>
+            <tr><td><strong>End Flow</strong></td><td>🏁</td><td>None (0)</td><td>Optional Text</td><td>No outgoing ports allowed</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: Soft Delete & Safety -->
+    <div class="slide" id="slide-13">
+      <div class="slide-title-area">
+        <div class="node-icon-box" style="background: #ef4444; color: #fff;">🛡️</div>
+        <div class="slide-title-text">
+          <h2>Soft Delete & Safety Confirmation Popups</h2>
+          <p>Prevent accidental agent destruction and safeguard historic customer conversation logs</p>
+        </div>
+      </div>
+      <div class="slide-grid">
+        <div class="node-preview-card" style="border-color: #ef4444; background: rgba(239, 68, 68, 0.08);">
+          <div class="node-preview-header" style="color: #f87171;">
+            <span>⚠️ Archive Confirmation</span>
+          </div>
+          <div class="node-preview-body">
+            <div><strong>Archive Workflow?</strong></div>
+            <div style="font-size: 11px; color: #fca5a5; margin-top: 4px;">
+              "Customer Support Agent" (v2)
+            </div>
+            <div style="font-size: 10px; color: #9ca3af; margin-top: 8px;">
+              Status will change to <code>archived</code>. Message runs and metrics remain safely intact in SQL database.
+            </div>
+          </div>
+          <div class="node-preview-ports" style="justify-content: flex-end;">
+            <span style="background: #991b1b; padding: 2px 6px; border-radius: 4px; color: #fff;">Archive Workflow</span>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <div class="detail-card">
+            <h3>🔒 Workflow Archiving (Soft Delete)</h3>
+            <p style="font-size: 12px; color: #d1d5db; line-height: 1.6;">
+              Clicking the trash button on any workflow card opens an Ant Design modal with full details (name, version, trigger keyword) and an explanation of the archive action.<br>
+              • Calls <code>DELETE /api/workflows/[id]</code> which runs: <code>UPDATE workflows SET status = 'archived'</code>.<br>
+              • The agent stops responding to WhatsApp incoming messages immediately.<br>
+              • All customer messages, executions, and analytics remain permanently preserved.
+            </p>
+          </div>
+
+          <div class="detail-card">
+            <h3>🔄 Restore & Step Level Protection</h3>
+            <p style="font-size: 12px; color: #e5e7eb; line-height: 1.6;">
+              • <strong>Restore Endpoint:</strong> <code>POST /api/workflows/[id]/restore</code> moves an archived flow back to <code>draft</code>.<br>
+              • <strong>Step Deletion Guard:</strong> Inside the canvas editor, clicking <strong>Delete Step</strong> triggers a warning modal confirming that connecting ports will be disconnected.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Presentation Footer & Controls -->
+  <footer>
+    <div class="shortcut-hint">
+      Use <strong>← Left</strong> and <strong>Right →</strong> keys on your keyboard to navigate slides.
+    </div>
+    <div class="nav-buttons">
+      <button id="prevBtn" onclick="prevSlide()">← Previous</button>
+      <button id="nextBtn" class="primary" onclick="nextSlide()">Next →</button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 13;
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      document.querySelectorAll('.slide').forEach((s, idx) => {
+        s.classList.toggle('active', idx + 1 === currentSlide);
+      });
+
+      document.getElementById('slideIndicator').innerText = `Slide ${currentSlide} of ${totalSlides}`;
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').innerText = currentSlide === totalSlides ? "Finish 🏁" : "Next →";
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+        nextSlide();
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.banner {
+  padding: 24px 28px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.bannerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.bannerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Filter Bar */
+.filterBar {
+  padding: 14px 20px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.filterIcon {
+  color: var(--brand);
+}
+
+.filterLabel {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.selectFilter {
+  min-width: 140px;
+}
+
+.keyInput {
+  max-width: 220px;
+  font-size: 12px;
+}
+
+.dateRangeGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  padding: 4px 10px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.calendarIcon {
+  color: var(--muted);
+}
+
+.dateInput {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.dateSep {
+  color: var(--muted);
+}
+
+/* Table Card */
+.tableCard {
+  padding: 22px;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.timeCell {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--text);
+}
+
+.eventTag {
+  font-family: monospace;
+  font-size: 11px;
+  border-radius: 6px;
+  text-transform: lowercase;
+}
+
+.badgeSuccess {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: rgba(37, 211, 102, 0.15);
+  color: var(--brand2);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badgeFailure {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.reasonCode {
+  font-family: monospace;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--stroke);
+  color: var(--text);
+}
+
+.prefixCode {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--brand);
+  background: rgba(15, 157, 122, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(15, 157, 122, 0.2);
+}
+
+.recipientMasked {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.ipText {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.mutedText {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.statusOk {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand2);
+}
+
+.statusWarn {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+.statusErr {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ef4444;
+}
+
+@media (max-width: 900px) {
+  .banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .bannerActions {
+    width: 100%;
+  }
+
+  .bannerActions button {
+    flex: 1;
+  }
+
+  .filterBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .selectFilter,
+  .keyInput {
+    width: 100%;
+    max-width: none;
+  }
+}

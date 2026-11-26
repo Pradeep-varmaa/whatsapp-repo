@@ -1,0 +1,577 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.topBar {
+  padding: 24px 28px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.actionButtonGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Filter Row */
+.filterRow {
+  padding: 16px 20px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 240px;
+}
+
+.filtersGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tableWrapper {
+  padding: 22px;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+/* ============================================================
+   DRAG AND DROP BUILDER STYLING
+   ============================================================ */
+
+.builderLayout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 24px;
+  min-height: 600px;
+}
+
+/* Left Canvas Area */
+.canvasArea {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Draggable Palette / Toolbox */
+.paletteSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.paletteHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.paletteTitle {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+
+.paletteGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.paletteCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 10px;
+  border-radius: 14px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+.paletteCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand);
+  background: var(--glass-strong);
+  box-shadow: 0 6px 18px rgba(15, 157, 122, 0.15);
+}
+
+.paletteCard:active {
+  cursor: grabbing;
+  transform: scale(0.97);
+}
+
+.paletteCardIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 157, 122, 0.15);
+  color: var(--brand);
+}
+
+.paletteCardLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.paletteCardDesc {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+/* Dropzone & Blocks Canvas */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 380px;
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px dashed var(--stroke);
+  transition: all 0.2s ease;
+}
+
+.dropzoneActive {
+  border-color: var(--brand);
+  background: rgba(15, 157, 122, 0.06);
+}
+
+.emptyDropzoneNotice {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 30px;
+}
+
+/* Active Block in Canvas */
+.canvasBlock {
+  border-radius: 14px;
+  background: var(--glass-strong);
+  border: 1px solid var(--stroke);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.canvasBlock:hover {
+  border-color: rgba(15, 157, 122, 0.4);
+}
+
+.canvasBlockHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.blockTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dragHandle {
+  cursor: grab;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.blockTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.blockBadge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(15, 157, 122, 0.15);
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.blockActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionIconBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.actionIconBtn:hover {
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.deleteIconBtn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Toolbar helpers for Body */
+.formatToolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.toolbarBtn {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.toolbarBtn:hover {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+
+.varInsertBtn {
+  background: rgba(124, 92, 255, 0.15);
+  border-color: var(--violet);
+  color: var(--violet);
+  font-weight: 600;
+}
+
+.varInsertBtn:hover {
+  background: var(--violet);
+  color: #fff;
+  border-color: var(--violet);
+}
+
+/* Button Item inside Buttons Block */
+.buttonList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.buttonItemRow {
+  display: grid;
+  grid-template-columns: 140px 1fr 32px;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ============================================================
+   WHATSAPP PHONE SIMULATOR
+   ============================================================ */
+
+.previewArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.previewLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  align-self: flex-start;
+}
+
+.phoneFrame {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 36px;
+  background: #0b141a;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 8px #1f2c34;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+}
+
+/* Phone Top Bar */
+.phoneHeader {
+  height: 56px;
+  background: #1f2c34;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #e9edef;
+  flex-shrink: 0;
+}
+
+.phoneHeaderUser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phoneAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.phoneUserInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.phoneUserName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e9edef;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.phoneUserStatus {
+  font-size: 10px;
+  color: #8696a0;
+}
+
+/* Chat Wallpaper Body */
+.phoneChatBody {
+  flex: 1;
+  background-color: #0b141a;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 16px 16px;
+  padding: 16px 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* WhatsApp Message Bubble */
+.bubbleContainer {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  max-width: 92%;
+}
+
+.waBubble {
+  background: #005c4b; /* Authentic WhatsApp dark green outgoing bubble */
+  color: #e9edef;
+  border-radius: 12px 12px 12px 2px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+/* Light theme bubble override if light mode */
+[data-theme="light"] .waBubble {
+  background: #d9fdd3;
+  color: #111b21;
+}
+
+.bubbleHeaderMedia {
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #8696a0;
+  font-size: 11px;
+}
+
+.bubbleHeaderText {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.bubbleBody {
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bubbleBody code {
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.bubbleParam {
+  background: rgba(124, 92, 255, 0.3);
+  color: #c4b5fd;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.bubbleFooter {
+  font-size: 11px;
+  color: #8696a0;
+  line-height: 1.3;
+}
+
+.bubbleMeta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 10px;
+  color: #8696a0;
+  margin-top: 2px;
+}
+
+/* Interactive Buttons below bubble */
+.bubbleButtonsList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.bubbleButton {
+  background: #005c4b;
+  color: #53bdeb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  user-select: none;
+}
+
+[data-theme="light"] .bubbleButton {
+  background: #ffffff;
+  color: #00a884;
+}
+
+/* cURL Code Preview Modal */
+.codeBlock {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(10, 16, 24, 0.85);
+  border: 1px solid var(--stroke);
+  color: #a7f3d0;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+@media (max-width: 900px) {
+  .builderLayout {
+    grid-template-columns: 1fr;
+  }
+  .paletteGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .previewArea {
+    margin-top: 20px;
+  }
+}

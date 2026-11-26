@@ -1,0 +1,225 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.topBar {
+  padding: 24px 28px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.alertBanner {
+  padding: 16px 20px;
+  border-radius: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.alertText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tableWrapper {
+  padding: 22px;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+/* Copy-Once Modal Styling */
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 10px;
+}
+
+.warningBox {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.keyDisplaySection,
+.endpointSection,
+.curlSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sectionLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.methodBadge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(15, 157, 122, 0.2);
+  color: var(--brand);
+}
+
+.keyBoxRow,
+.urlRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rawKeyText {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--stroke);
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--brand2);
+  word-break: break-all;
+  user-select: all;
+}
+
+.urlRow code {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--stroke);
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.codeBlock {
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(10, 16, 24, 0.85);
+  border: 1px solid var(--stroke);
+  color: #a7f3d0;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.chipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px;
+  min-height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--stroke);
+  transition: border-color 0.2s ease;
+}
+
+.chipsContainer:focus-within {
+  border-color: var(--brand);
+}
+
+.chipInput {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--text);
+  font-family: monospace;
+  font-size: 13px;
+  flex: 1;
+  min-width: 140px;
+}
+
+.chipInput::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.chipHint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.chipAddBtn {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--glass-strong);
+  border: 1px solid var(--stroke);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chipAddBtn:hover {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+
+@media (max-width: 900px) {
+  .topBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .keyBoxRow,
+  .urlRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
